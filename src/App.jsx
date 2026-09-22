@@ -34,6 +34,21 @@ const skills = [
   'Production ML',
 ]
 
+const capabilities = [
+  {
+    title: 'Enterprise AI systems',
+    detail: 'Production-grade LLM products and knowledge workflows shaped for real business constraints.',
+  },
+  {
+    title: 'Agentic automation',
+    detail: 'Reasoning layers, orchestration logic, and API-driven tools for resilient operational workflows.',
+  },
+  {
+    title: 'Cloud-native delivery',
+    detail: 'Architecture, monitoring, and deployment patterns that turn prototypes into maintainable systems.',
+  },
+]
+
 const timeline = [
   {
     period: '2023 — Present',
@@ -236,6 +251,22 @@ function App() {
               <strong>{metric.value}</strong>
               <span>{metric.label}</span>
             </div>
+          ))}
+        </section>
+
+        <section className="signal-band" aria-label="Core capabilities">
+          {capabilities.map((item, index) => (
+            <motion.article
+              className="signal-card"
+              key={item.title}
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.12 * index }}
+            >
+              <span className="signal-index">0{index + 1}</span>
+              <h3>{item.title}</h3>
+              <p>{item.detail}</p>
+            </motion.article>
           ))}
         </section>
 
