@@ -99,6 +99,8 @@ const projects = [
 
 function FloatingScene() {
   const groupRef = useRef()
+  const starRef = useRef()
+
   const ringData = useMemo(
     () => [
       { radius: 2.7, color: '#7dd3fc', rotation: [Math.PI / 2, 0, 0] },
@@ -118,10 +120,27 @@ function FloatingScene() {
     [],
   )
 
+  const particles = useMemo(() => {
+    const positions = new Float32Array(180 * 3)
+    for (let i = 0; i < 180; i += 1) {
+      const i3 = i * 3
+      positions[i3] = (Math.random() - 0.5) * 15
+      positions[i3 + 1] = (Math.random() - 0.5) * 12
+      positions[i3 + 2] = (Math.random() - 0.5) * 9
+    }
+    return positions
+  }, [])
+
   useFrame((state) => {
     if (!groupRef.current) return
-    groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.25
-    groupRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.7) * 0.32
+    const t = state.clock.getElapsedTime()
+    groupRef.current.rotation.y = t * 0.28
+    groupRef.current.rotation.x = Math.sin(t * 0.7) * 0.32
+
+    if (starRef.current) {
+      starRef.current.rotation.y = -t * 0.35
+      starRef.current.rotation.z = Math.sin(t * 0.5) * 0.25
+    }
   })
 
   return (
@@ -131,25 +150,28 @@ function FloatingScene() {
         <meshStandardMaterial color="#07111d" metalness={0.75} roughness={0.3} />
       </mesh>
 
+      <points ref={starRef}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[particles, 3]} />
+        </bufferGeometry>
+        <pointsMaterial size={0.06} color="#dbeafe" transparent opacity={0.8} />
+      </points>
+
       {ringData.map((ring, index) => (
-        <mesh
-          key={index}
-          rotation={ring.rotation}
-          position={[0, 0.1 * index, 0]}
-        >
+        <mesh key={index} rotation={ring.rotation} position={[0, 0.12 * index, 0]}>
           <torusGeometry args={[ring.radius, 0.05, 16, 120]} />
           <meshStandardMaterial color={ring.color} emissive={ring.color} emissiveIntensity={0.75} />
         </mesh>
       ))}
 
       {blocks.map((block, index) => (
-        <Float key={index} speed={1.6 + index * 0.25} rotationIntensity={2} floatIntensity={1.8}>
+        <Float key={index} speed={1.7 + index * 0.25} rotationIntensity={2.3} floatIntensity={2.1}>
           <mesh position={block.position} scale={block.scale}>
             <boxGeometry args={[1, 1, 1]} />
             <meshStandardMaterial
               color={block.color}
               emissive={block.color}
-              emissiveIntensity={0.7}
+              emissiveIntensity={0.8}
               metalness={0.8}
               roughness={0.2}
             />
@@ -157,17 +179,24 @@ function FloatingScene() {
         </Float>
       ))}
 
-      <Float speed={2} rotationIntensity={1.5} floatIntensity={1.5}>
+      <Float speed={2.2} rotationIntensity={1.8} floatIntensity={2.4}>
         <mesh position={[0.4, 1.2, 0.7]}>
-          <octahedronGeometry args={[0.7, 0]} />
-          <meshStandardMaterial color="#f8fafc" emissive="#7dd3fc" emissiveIntensity={0.8} />
+          <octahedronGeometry args={[0.8, 0]} />
+          <meshStandardMaterial color="#f8fafc" emissive="#7dd3fc" emissiveIntensity={1} />
         </mesh>
       </Float>
 
-      <pointLight position={[2, 4, 5]} intensity={25} color="#60a5fa" />
-      <pointLight position={[-4, -2, 2]} intensity={18} color="#c084fc" />
+      <Float speed={1.5} rotationIntensity={2.5} floatIntensity={2.1}>
+        <mesh position={[-1.8, -1.2, -1.2]}>
+          <icosahedronGeometry args={[0.65, 0]} />
+          <meshStandardMaterial color="#c084fc" emissive="#c084fc" emissiveIntensity={0.9} />
+        </mesh>
+      </Float>
+
+      <pointLight position={[2, 4, 5]} intensity={28} color="#60a5fa" />
+      <pointLight position={[-4, -2, 2]} intensity={20} color="#c084fc" />
       <ambientLight intensity={0.7} />
-      <directionalLight position={[5, 8, 4]} intensity={1.6} color="#f8fafc" />
+      <directionalLight position={[5, 8, 4]} intensity={1.7} color="#f8fafc" />
     </group>
   )
 }
