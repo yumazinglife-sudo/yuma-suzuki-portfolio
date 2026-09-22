@@ -31,6 +31,9 @@ const skills = [
   'Cloud Deployment',
   'Enterprise Integration',
   'Vector Search',
+  'MLOps',
+  'Prompt Design',
+  'Data Architecture',
   'Production ML',
 ]
 
@@ -197,9 +200,9 @@ function App() {
               <FiStar />
               <span>Senior AI Engineer</span>
             </div>
-            <h1>Building intelligent systems with context, precision, and movement.</h1>
+            <h1>Designing AI systems that move ideas from signal to action.</h1>
             <p className="lead">
-              I design and deploy production AI, LLM, and data systems that turn enterprise complexity into clear, scalable outcomes.
+              I build production-ready intelligent systems for enterprise teams — turning ambiguity into clarity, workflows into momentum, and complex data into measurable outcomes.
             </p>
 
             <div className="cta-row">
@@ -234,7 +237,7 @@ function App() {
 
               <div className="floating-card card-one">
                 <span className="card-label">Current focus</span>
-                <strong>LLM + RAG</strong>
+                <strong>LLM + RAG systems</strong>
               </div>
 
               <div className="floating-card card-two">
