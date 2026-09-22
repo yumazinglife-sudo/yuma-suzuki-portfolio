@@ -1,0 +1,350 @@
+import { Canvas, useFrame } from '@react-three/fiber'
+import { Float, OrbitControls } from '@react-three/drei'
+import { motion } from 'framer-motion'
+import { useMemo, useRef } from 'react'
+import {
+  FiArrowRight,
+  FiBriefcase,
+  FiCpu,
+  FiDatabase,
+  FiGithub,
+  FiLayers,
+  FiLinkedin,
+  FiMail,
+  FiMapPin,
+  FiStar,
+} from 'react-icons/fi'
+import './App.css'
+
+const metrics = [
+  { label: 'Years in Software', value: '8+' },
+  { label: 'AI systems shipped', value: '20+' },
+  { label: 'Enterprise integrations', value: '15+' },
+  { label: 'Tokyo based', value: 'Japan' },
+]
+
+const skills = [
+  'Large Language Models',
+  'RAG Systems',
+  'AI Agents',
+  'Python APIs',
+  'Cloud Deployment',
+  'Enterprise Integration',
+  'Vector Search',
+  'Production ML',
+]
+
+const timeline = [
+  {
+    period: '2023 — Present',
+    company: 'ITOCHU Techno-Solutions Corporation (CTC)',
+    role: 'Senior AI Engineer',
+    description:
+      'Designing enterprise-grade AI systems, LLM workflows, retrieval pipelines, and autonomous information processing for production use.',
+  },
+  {
+    period: '2020 — 2023',
+    company: 'REGALIA',
+    role: 'AI / Machine Learning Engineer',
+    description:
+      'Built ML-powered applications, backend services, NLP automation, and cloud-native deployment workflows for business systems.',
+  },
+  {
+    period: '2018 — 2020',
+    company: 'MODE, Inc.',
+    role: 'Software Engineer',
+    description:
+      'Developed web apps, internal business systems, and backend services with a strong focus on reliability and performance.',
+  },
+]
+
+const projects = [
+  {
+    title: 'AI Workflow Automation',
+    type: 'Autonomous systems',
+    description:
+      'Agent-based orchestration combining reasoning, APIs, and internal tools to automate document analysis and business workflows.',
+  },
+  {
+    title: 'Enterprise RAG Knowledge Assistant',
+    type: 'Knowledge intelligence',
+    description:
+      'Context-aware assistant powered by document ingestion, embeddings, reranking, vector retrieval, and LLM-driven answer generation.',
+  },
+  {
+    title: 'Production AI Platform',
+    type: 'Cloud-native delivery',
+    description:
+      'Built operational AI services with monitoring, deployment readiness, and maintainable architecture for production environments.',
+  },
+]
+
+function FloatingScene() {
+  const groupRef = useRef()
+  const ringData = useMemo(
+    () => [
+      { radius: 2.7, color: '#7dd3fc', rotation: [Math.PI / 2, 0, 0] },
+      { radius: 3.5, color: '#93c5fd', rotation: [Math.PI / 2, 0.8, 0.6] },
+      { radius: 4.2, color: '#c4b5fd', rotation: [Math.PI / 2, 1.2, 0.9] },
+    ],
+    [],
+  )
+
+  const blocks = useMemo(
+    () => [
+      { position: [-2.3, 0.5, -0.9], scale: 0.7, color: '#7dd3fc' },
+      { position: [1.5, 1.2, 0.8], scale: 0.9, color: '#c084fc' },
+      { position: [2.2, -0.8, -1.4], scale: 0.8, color: '#60a5fa' },
+      { position: [-0.8, -1.1, 1.6], scale: 0.65, color: '#67e8f9' },
+    ],
+    [],
+  )
+
+  useFrame((state) => {
+    if (!groupRef.current) return
+    groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.25
+    groupRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.7) * 0.32
+  })
+
+  return (
+    <group ref={groupRef}>
+      <mesh rotation-x={-Math.PI / 2} position={[0, -1.7, 0]}>
+        <circleGeometry args={[4.8, 64]} />
+        <meshStandardMaterial color="#07111d" metalness={0.75} roughness={0.3} />
+      </mesh>
+
+      {ringData.map((ring, index) => (
+        <mesh
+          key={index}
+          rotation={ring.rotation}
+          position={[0, 0.1 * index, 0]}
+        >
+          <torusGeometry args={[ring.radius, 0.05, 16, 120]} />
+          <meshStandardMaterial color={ring.color} emissive={ring.color} emissiveIntensity={0.75} />
+        </mesh>
+      ))}
+
+      {blocks.map((block, index) => (
+        <Float key={index} speed={1.6 + index * 0.25} rotationIntensity={2} floatIntensity={1.8}>
+          <mesh position={block.position} scale={block.scale}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial
+              color={block.color}
+              emissive={block.color}
+              emissiveIntensity={0.7}
+              metalness={0.8}
+              roughness={0.2}
+            />
+          </mesh>
+        </Float>
+      ))}
+
+      <Float speed={2} rotationIntensity={1.5} floatIntensity={1.5}>
+        <mesh position={[0.4, 1.2, 0.7]}>
+          <octahedronGeometry args={[0.7, 0]} />
+          <meshStandardMaterial color="#f8fafc" emissive="#7dd3fc" emissiveIntensity={0.8} />
+        </mesh>
+      </Float>
+
+      <pointLight position={[2, 4, 5]} intensity={25} color="#60a5fa" />
+      <pointLight position={[-4, -2, 2]} intensity={18} color="#c084fc" />
+      <ambientLight intensity={0.7} />
+      <directionalLight position={[5, 8, 4]} intensity={1.6} color="#f8fafc" />
+    </group>
+  )
+}
+
+function App() {
+  return (
+    <div className="portfolio-shell">
+      <header className="topbar">
+        <div className="brand-block">
+          <span className="brand-dot" />
+          <span>Yuma Suzuki</span>
+        </div>
+        <nav className="nav-links">
+          <a href="#about">About</a>
+          <a href="#experience">Experience</a>
+          <a href="#projects">Projects</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </header>
+
+      <main>
+        <section className="hero-section">
+          <motion.div
+            className="hero-copy"
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="eyebrow-row">
+              <FiStar />
+              <span>Senior AI Engineer</span>
+            </div>
+            <h1>Building intelligent systems with context, precision, and movement.</h1>
+            <p className="lead">
+              I design and deploy production AI, LLM, and data systems that turn enterprise complexity into clear, scalable outcomes.
+            </p>
+
+            <div className="cta-row">
+              <a href="#projects" className="primary-btn">
+                View work
+                <FiArrowRight />
+              </a>
+              <a href="#contact" className="secondary-btn">
+                Contact me
+              </a>
+            </div>
+
+            <div className="meta-row">
+              <span><FiMapPin /> Tokyo, Japan</span>
+              <span><FiBriefcase /> 8+ years of engineering</span>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="visual-panel"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.9, delay: 0.15 }}
+          >
+            <div className="glass-frame">
+              <div className="canvas-wrap">
+                <Canvas camera={{ position: [0, 0, 8], fov: 48 }}>
+                  <FloatingScene />
+                  <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
+                </Canvas>
+              </div>
+
+              <div className="floating-card card-one">
+                <span className="card-label">Current focus</span>
+                <strong>LLM + RAG</strong>
+              </div>
+
+              <div className="floating-card card-two">
+                <span className="card-label">Primary stack</span>
+                <strong>Python · AI · Cloud</strong>
+              </div>
+            </div>
+          </motion.div>
+        </section>
+
+        <section className="metrics-grid" aria-label="Key metrics">
+          {metrics.map((metric) => (
+            <div className="metric-card" key={metric.label}>
+              <strong>{metric.value}</strong>
+              <span>{metric.label}</span>
+            </div>
+          ))}
+        </section>
+
+        <section id="about" className="content-section intro-section">
+          <div className="section-heading">
+            <span className="kicker">About</span>
+            <h2>Designing systems that turn uncertainty into operational clarity.</h2>
+          </div>
+
+          <div className="about-grid">
+            <div className="portrait-card">
+              <img
+                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80"
+                alt="Portrait of Yuma Suzuki"
+              />
+            </div>
+
+            <div className="about-copy">
+              <p>
+                Senior AI Engineer with 8 years of software engineering and AI experience across three IT companies in Japan. I build production applications, AI systems, LLM-powered workflows, backend services, and enterprise integrations that can move from prototype to deployment with discipline and clarity.
+              </p>
+              <p>
+                My work spans RAG pipelines, AI agents, cloud-native architecture, and intelligent automation for business processes. I enjoy bridging technical depth with product practicality — turning broad ideas into resilient systems that create measurable value.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="experience" className="content-section">
+          <div className="section-heading">
+            <span className="kicker">Experience</span>
+            <h2>From software engineering foundations to AI platform leadership.</h2>
+          </div>
+
+          <div className="timeline-list">
+            {timeline.map((item) => (
+              <article className="timeline-item" key={item.period}>
+                <div className="timeline-period">{item.period}</div>
+                <div className="timeline-body">
+                  <div className="timeline-header">
+                    <h3>{item.role}</h3>
+                    <span>{item.company}</span>
+                  </div>
+                  <p>{item.description}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="projects" className="content-section">
+          <div className="section-heading">
+            <span className="kicker">Projects</span>
+            <h2>High-impact systems built with intelligence and operational care.</h2>
+          </div>
+
+          <div className="project-grid">
+            {projects.map((project) => (
+              <motion.article
+                key={project.title}
+                className="project-card"
+                whileHover={{ y: -8, scale: 1.01 }}
+                transition={{ type: 'spring', stiffness: 180, damping: 18 }}
+              >
+                <div className="project-topline">
+                  <span className="project-type">{project.type}</span>
+                  <FiLayers />
+                </div>
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+              </motion.article>
+            ))}
+          </div>
+        </section>
+
+        <section className="content-section stack-section">
+          <div className="section-heading">
+            <span className="kicker">Stack</span>
+            <h2>Built for reasoning, integration, and production resilience.</h2>
+          </div>
+
+          <div className="skill-cloud">
+            {skills.map((skill) => (
+              <span key={skill} className="skill-pill">{skill}</span>
+            ))}
+          </div>
+        </section>
+      </main>
+
+      <footer id="contact" className="site-footer">
+        <div>
+          <span className="kicker">Contact</span>
+          <h3>Let’s build something meaningful.</h3>
+        </div>
+
+        <div className="footer-links">
+          <a href="https://github.com/yumazinglife-sudo" target="_blank" rel="noreferrer">
+            <FiGithub /> GitHub
+          </a>
+          <a href="https://www.linkedin.com/in/yuma-suzuki-b2449b439/" target="_blank" rel="noreferrer">
+            <FiLinkedin /> LinkedIn
+          </a>
+          <a href="mailto:yumazinglife@gmail.com">
+            <FiMail /> Email
+          </a>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+export default App
