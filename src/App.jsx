@@ -1,7 +1,7 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, OrbitControls } from '@react-three/drei'
 import { motion } from 'framer-motion'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   FiArrowRight,
   FiBriefcase,
@@ -202,8 +202,28 @@ function FloatingScene() {
 }
 
 function App() {
+  const [pointer, setPointer] = useState({ x: 50, y: 50 })
+
+  useEffect(() => {
+    const handlePointerMove = (event) => {
+      const x = (event.clientX / window.innerWidth) * 100
+      const y = (event.clientY / window.innerHeight) * 100
+      setPointer({ x, y })
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+    return () => window.removeEventListener('pointermove', handlePointerMove)
+  }, [])
+
   return (
-    <div className="portfolio-shell">
+    <div
+      className="portfolio-shell"
+      style={{
+        '--pointer-x': `${pointer.x}%`,
+        '--pointer-y': `${pointer.y}%`,
+      }}
+    >
+      <div className="cursor-glow" style={{ left: `${pointer.x}%`, top: `${pointer.y}%` }} />
       <header className="topbar">
         <div className="brand-block">
           <span className="brand-dot" />
@@ -381,8 +401,16 @@ function App() {
           </div>
 
           <div className="skill-cloud">
-            {skills.map((skill) => (
-              <span key={skill} className="skill-pill">{skill}</span>
+            {skills.map((skill, index) => (
+              <span
+                key={skill}
+                className="skill-pill"
+                style={{
+                  transform: `translate3d(${(pointer.x - 50) * (0.25 + index * 0.08)}px, ${(pointer.y - 50) * (0.18 + index * 0.06)}px, 0) rotate(${((index % 2) * 2 - 1) * 1.8}deg)`,
+                }}
+              >
+                {skill}
+              </span>
             ))}
           </div>
         </section>
