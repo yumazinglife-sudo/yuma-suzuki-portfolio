@@ -282,7 +282,7 @@ function App() {
           <div className="about-grid">
             <div className="portrait-card">
               <img
-                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80"
+                src="/photo.jpg"
                 alt="Portrait of Yuma Suzuki"
               />
             </div>
